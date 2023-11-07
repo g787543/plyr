@@ -3413,17 +3413,33 @@ typeof navigator === "object" && (function (global, factory) {
       // Get cues from track
       if (!cues) {
         const track = captions.getCurrentTrack.call(this);
-        cues = Array.from((track || {}).activeCues || []).map(cue => cue.getCueAsHTML()).map(getHTML);
+        cues = Array.from((track || {}).activeCues || []).map(cue => {
+          const html = cue.getCueAsHTML();
+          return {
+            text: getHTML(html),
+            html: html.children
+          };
+        });
       }
 
       // Set new caption text
-      const content = cues.map(cueText => cueText.trim()).join('\n');
+      const content = cues.map(({
+        text: cueText
+      }) => cueText.trim()).join('\n');
+      const htmls = [];
+      cues.forEach(({
+        html
+      }) => {
+        htmls.push(...html);
+      });
       const changed = content !== this.elements.captions.innerHTML;
       if (changed) {
         // Empty the container and create a new child element
         emptyElement(this.elements.captions);
         const caption = createElement('span', getAttributesFromSelector(this.config.selectors.caption));
-        caption.innerHTML = content;
+        if (htmls.length > 0) {
+          htmls.map(html => caption.appendChild(html));
+        }
         this.elements.captions.appendChild(caption);
 
         // Trigger event
