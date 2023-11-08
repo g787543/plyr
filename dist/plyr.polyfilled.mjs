@@ -2272,7 +2272,7 @@ const controls = {
     const flex = createElement('span');
 
     // We have to set as HTML incase of special characters
-    flex.innerHTML = title;
+    flex.innerText = title;
     if (is.element(badge)) {
       flex.appendChild(badge);
     }
