@@ -349,7 +349,7 @@ const vimeo = {
     });
 
     player.embed.on('cuechange', ({ cues = [] }) => {
-      const strippedCues = cues.map((cue) => stripHTML(cue.text));
+      const strippedCues = cues.map((cue) => stripHTML(cue.text.replaceAll('<[^>]*>', '')));
       captions.updateCues.call(player, strippedCues);
     });
 
