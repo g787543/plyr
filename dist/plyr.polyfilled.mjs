@@ -1675,19 +1675,6 @@ function toCamelCase(input = '') {
   return string.charAt(0).toLowerCase() + string.slice(1);
 }
 
-// Remove HTML from a string
-function stripHTML(source) {
-  const fragment = document.createDocumentFragment();
-  const element = document.createElement('div');
-  fragment.appendChild(element);
-  const doc = new DOMParser().parseFromString(`<div id="temp">${source}</div>`, 'text/xml');
-  const children = doc.querySelector('#temp').childNodes;
-  children.forEach(item => {
-    element.appendChild(item);
-  });
-  return fragment.firstChild.innerText;
-}
-
 // Like outerHTML, but also works for DocumentFragment
 function getHTML(element) {
   const wrapper = document.createElement('div');
@@ -6269,7 +6256,7 @@ const vimeo = {
     player.embed.on('cuechange', ({
       cues = []
     }) => {
-      const strippedCues = cues.map(cue => stripHTML(cue.text.replaceAll('<[^>]*>', '')));
+      const strippedCues = cues.map(cue => cue.text.replaceAll('<[^>]*>', ''));
       captions.updateCues.call(player, strippedCues);
     });
     player.embed.on('loaded', () => {
