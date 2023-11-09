@@ -66,7 +66,11 @@ export function stripHTML(source) {
   const fragment = document.createDocumentFragment();
   const element = document.createElement('div');
   fragment.appendChild(element);
-  element.innerHTML = source;
+  const doc = new DOMParser().parseFromString(`<div id="temp">${source}</div>`, 'text/xml');
+  const children = doc.querySelector('#temp').childNodes;
+  children.forEach((item) => {
+    element.appendChild(item);
+  });
   return fragment.firstChild.innerText;
 }
 
